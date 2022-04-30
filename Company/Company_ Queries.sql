@@ -18,9 +18,14 @@ WHERE e1.salary > (SELECT AVG(salary) FROM employee e2
 					WHERE e2.branch_id = e1.branch_id);
                     
 -- Find the employees who do not have clients
-SELECT * FROM employee e
+SELECT e.emp_id, e.last_name FROM employee e
 WHERE NOT EXISTS (SELECT * FROM works_with ww 
 					WHERE ww.emp_id = e.emp_id);
+-- same as above
+SELECT e.emp_id, e.last_name, ww.client_id FROM employee e
+LEFT JOIN works_with ww
+ON e.emp_id = ww.emp_id
+WHERE ww.client_id IS NULL;
 
 -- Nested Queries
 -- Find all clients who are handled by the branch that Michael Scott manages 
@@ -94,7 +99,8 @@ SELECT COALESCE(e.emp_id, ww.emp_id), e.last_name, ww.client_id, ww.total_sales 
 RIGHT JOIN works_with ww ON e.emp_id = ww.emp_id
 WHERE e.emp_id IS NULL;
 
--- Self Join
+-- Self Join: Joins a table with itself,
+-- -- especially when the table has a FOREIGN KEY which references its own PRIMARY KEY. 
 SELECT emp.emp_id, emp.last_name, emp.super_id, sup.last_name AS supervisor 
 FROM employee emp
 LEFT JOIN employee sup

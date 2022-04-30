@@ -7,8 +7,8 @@ SET foreign_key_checks = 1; -- 1 = on
 
 CREATE TABLE employee (
   emp_id INT AUTO_INCREMENT PRIMARY KEY,
-  first_name VARCHAR(40),
-  last_name VARCHAR(40),
+  first_name VARCHAR(40) NOT NULL,
+  last_name VARCHAR(40) NOT NULL,
   birth_day DATE, -- date format: 'yyyy-mm-dd'
   sex VARCHAR(1),
   salary INT,
@@ -45,7 +45,7 @@ CREATE TABLE works_with (
   emp_id INT,
   client_id INT,
   total_sales INT,
-  PRIMARY KEY(emp_id, client_id),
+  PRIMARY KEY(emp_id, client_id), -- unique combination between two
   FOREIGN KEY(emp_id) REFERENCES employee(emp_id) ON DELETE CASCADE,
   FOREIGN KEY(client_id) REFERENCES client(client_id) ON DELETE CASCADE
 );
