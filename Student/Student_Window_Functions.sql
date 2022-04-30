@@ -49,10 +49,13 @@ WINDOW w AS (PARTITION BY major ORDER BY gpa DESC
     RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING);
 
 -- NTile: Distribute the rows in an ordered partition into a specified number of groups
-SELECT name, gpa, CASE
-	WHEN zz.gpa_buckets = 1 THEN 'great'
-    WHEN zz.gpa_buckets = 2 THEN 'decent'
-    ELSE 'poor'
+SELECT *, NTILE(3) OVER (ORDER BY gpa DESC) AS gpa_buckets
+FROM student
+WHERE gpa IS NOT NULL;
+SELECT name, gpa, 
+	CASE WHEN zz.gpa_buckets = 1 THEN 'great'
+		WHEN zz.gpa_buckets = 2 THEN 'decent'
+		ELSE 'poor'
 END AS gpa_status FROM 
 	(SELECT *, NTILE(3) OVER (ORDER BY gpa DESC) AS gpa_buckets
 	FROM student
